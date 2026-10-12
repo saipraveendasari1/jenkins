@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenkins Hands-on Lab Guide | Lab 1 & Lab 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(31, 41, 55, 0.85);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.3);
+      --primary: #3b82f6;
+      --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --accent-red: #f43f5e;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --code-bg: #030712;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.25);
+      --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.2);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.9);
+      --bg-card-hover: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-accent: rgba(37, 99, 235, 0.3);
+      --primary: #2563eb;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      --code-bg: #1e293b;
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.06);
+      --shadow-glow: 0 0 30px rgba(37, 99, 235, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.12) 0px, transparent 50%);
+      background-attachment: fixed;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Header Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: rgba(10, 14, 23, 0.85);
+      border-bottom: 1px solid var(--border-color);
+    }
+    [data-theme="light"] header {
+      background: rgba(248, 250, 252, 0.85);
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-gradient);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .logo-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1280px;
+      margin: 40px auto 30px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h2 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .hero h2 span {
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 30px;
+    }
+
+    .server-status-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 10px 20px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-subtle);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* Quick Nav Tabs */
+    .lab-tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 40px;
+      justify-content: center;
+    }
+
+    .lab-tab-btn {
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lab-tab-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+    .lab-tab-btn.active {
+      background: var(--primary-gradient);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Lab Card Wrapper */
+    .lab-section {
+      margin-bottom: 60px;
+    }
+
+    .lab-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 32px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+    .lab-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary-gradient);
+    }
+
+    .lab-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+    }
+    .lab-header h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .lab-header p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 900px;
+    }
+
+    /* Step Card */
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      margin-bottom: 36px;
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .step-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .step-header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .step-number-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--primary-gradient);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .step-number-badge.red {
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+    }
+    .step-number-badge.green {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .step-header-text h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .step-header-text p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .step-content {
+      padding: 32px;
+    }
+
+    /* Instruction Pills & Guidance */
+    .instruction-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .instruction-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+    .click-target {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(225, 29, 72, 0.4);
+      color: #fb7185;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .key-badge {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Screenshots Display */
+    .screenshot-wrapper {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: #000;
+      margin-top: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .screenshot-toolbar {
+      padding: 10px 16px;
+      background: rgba(20, 24, 33, 0.95);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+
+    .screenshot-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: zoom-in;
+      transition: transform 0.25s ease;
+    }
+    .screenshot-img:hover {
+      opacity: 0.96;
+    }
+
+    .screenshot-caption {
+      padding: 12px 20px;
+      background: rgba(17, 24, 39, 0.9);
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .screenshot-caption svg {
+      flex-shrink: 0;
+    }
+
+    /* Code Snippet Box */
+    .code-box {
+      margin: 20px 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--code-bg);
+    }
+    .code-box-header {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .code-pre {
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    /* OS Tabs */
+    .os-tabs-header {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 16px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .os-tab-btn {
+      padding: 10px 16px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .os-tab-btn.active {
+      color: #60a5fa;
+      border-bottom-color: #60a5fa;
+    }
+    .os-tab-content {
+      display: none;
+    }
+    .os-tab-content.active {
+      display: block;
+    }
+
+    /* Instructor Note Callout */
+    .instructor-box {
+      margin-top: 24px;
+      padding: 24px 28px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+    }
+    .instructor-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #10b981;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+    }
+    .instructor-content h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #34d399;
+      margin-bottom: 8px;
+    }
+    .instructor-content p {
+      font-size: 14.5px;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* Parameter Table */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .param-table th, .param-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+    }
+    .param-table th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      font-weight: 700;
+    }
+    .param-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Lightbox Modal */
+    .lightbox-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 999999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      cursor: zoom-out;
+    }
+    .lightbox-modal.active {
+      display: flex;
+    }
+    .lightbox-img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      color: #fff;
+      font-size: 36px;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h2 { font-size: 30px; }
+      .step-header { padding: 18px 20px; }
+      .step-content { padding: 20px; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-badge">
+        <div class="logo-icon">J</div>
+        <div class="logo-text">
+          <h1>Jenkins DevOps Lab Manual</h1>
+          <span>Server: localhost:8000 | Jenkins v2.580.1</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#lab1" class="active">Lab 1: First Job</a>
+        <a href="#lab2">Lab 2: Parameters</a>
+        <a href="#instructor">Teaching Notes</a>
+        <button class="theme-toggle-btn" id="themeToggle">
+          <span>🌙</span>
+          <span id="themeLabel">Dark Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Header -->
+  <section class="hero">
+    <div class="hero-pill">DevOps Engineering Lab 01 & 02</div>
+    <h2>Jenkins Pipeline <span>Interactive Visual Guide</span></h2>
+    <p>Complete step-by-step walkthrough with annotated live screen captures directly from Jenkins running on port 8000. Learn freestyle job mechanics, OS build runners, runtime parameters, and exit codes.</p>
+    <div class="server-status-card">
+      <div class="status-dot"></div>
+      <span>Target Server: <code>http://localhost:8000</code></span>
+      <span style="color:var(--text-muted)">|</span>
+      <span>Default User: <code>sai</code></span>
+    </div>
+  </section>
+
+  <!-- Quick Lab Switcher -->
+  <div class="container">
+    <div class="lab-tabs">
+      <button class="lab-tab-btn active" onclick="scrollToLab('lab1')">
+        <span>🚀</span>
+        <span>Lab 1: Your First Freestyle Job</span>
+      </button>
+      <button class="lab-tab-btn" onclick="scrollToLab('lab2')">
+        <span>⚙️</span>
+        <span>Lab 2: Parameterized Pipeline</span>
+      </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- LAB 1 SECTION -->
+    <!-- ========================================== -->
+    <section id="lab1" class="lab-section">
+      <div class="lab-header">
+        <span class="lab-badge">Lab 1 Walkthrough</span>
+        <h2>Your First Jenkins Job (Freestyle Project)</h2>
+        <p><strong>Objective:</strong> Teach students how Jenkins triggers automated tasks, executes native operating system shell/batch commands, and captures standard output and standard error in Console Output.</p>
+      </div>
+
+      <!-- Step 0: Sign in -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">0</div>
+          <div class="step-header-text">
+            <h3>Access Jenkins & Sign In</h3>
+            <p>Open browser to <code>http://localhost:8000</code> and sign into your Jenkins account.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Open your browser and navigate to <a href="http://localhost:8000" target="_blank" style="color:#60a5fa">http://localhost:8000</a>. Enter your username and password, then click <span class="click-target">Sign in</span>.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/login</span>
+              <span>Step 0 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/00_jenkins_login.png" alt="Jenkins Login Page" onclick="openLightbox(this.src)">
+            <div class="screenshot-caption">
+              <span>📌 <strong>Visual Cue:</strong> Notice the highlighted Sign-in button with credential input fields.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 1: New Item -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">1</div>
+          <div class="step-header-text">
+            <h3>Click 'New Item' on Jenkins Dashboard</h3>
+            <p>Initiate the creation of a new build project from the main left-hand sidebar.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 On the main Dashboard, look at the top-left sidebar menu and click <span class="click-target">New Item</span>.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/</span>
+              <span>Step 1 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_01_dashboard.png" alt="Jenkins Dashboard New Item" onclick="openLightbox(this.src)">
+            <div class="screenshot-caption">
+              <span>📌 <strong>Visual Cue:</strong> Follow the red glowing badge pointing directly to <strong>New Item</strong> in the left menu.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Item Name & Freestyle Project -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">2</div>
+          <div class="step-header-text">
+            <h3>Name the Project and Select 'Freestyle project'</h3>
+            <p>Give your project an identifiable name and pick the Freestyle archetype.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 In the <strong>Enter an item name</strong> field, type: <span class="key-badge">01-hello-world</span></span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 In the project card list below, click on <span class="click-target">Freestyle project</span>.</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Scroll down to the bottom and click the <span class="click-target">OK</span> button.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/newJob</span>
+              <span>Step 2 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_02_new_item_freestyle.png" alt="New Item Freestyle Project" onclick="openLightbox(this.src)">
+            <div class="screenshot-caption">
+              <span>📌 <strong>Visual Cue:</strong> '01-hello-world' entered in the text box, Freestyle project highlighted, and the OK button tagged.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 & 4: Build Steps Section -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">3 & 4</div>
+          <div class="step-header-text">
+            <h3>Scroll to 'Build Steps' & Add Command Runner</h3>
+            <p>Configure Jenkins to execute native operating system commands.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 In the configuration page, scroll down to the <strong>Build Steps</strong> section.</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Click the <span class="click-target">Add build step</span> dropdown button.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/job/01-hello-world/configure</span>
+              <span>Step 3: Scroll to Build Steps</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_03_build_steps_section.png" alt="Add Build Step Button" onclick="openLightbox(this.src)">
+          </div>
+
+          <div class="instruction-flow" style="margin-top:24px;">
+            <div class="instruction-item">
+              <span>👉 Select the appropriate runner based on your operating system:
+                <br>• <strong>Windows Students:</strong> Select <span class="click-target">Execute Windows batch command</span>
+                <br>• <strong>Linux / Mac Students:</strong> Select <span class="click-target">Execute shell</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Dropdown Menu Selection</span>
+              <span>Step 4: Dropdown Options</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_04_dropdown_select_batch.png" alt="Dropdown Build Step Options" onclick="openLightbox(this.src)">
+            <div class="screenshot-caption">
+              <span>📌 <strong>Visual Cue:</strong> Notice both runners in the menu: <strong>Execute Windows batch command</strong> and <strong>Execute shell</strong>.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Enter Script & Save -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">5</div>
+          <div class="step-header-text">
+            <h3>Enter Script Code & Click Save</h3>
+            <p>Paste the system diagnostics command block into the command textarea and save.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <!-- OS Tabs Switcher -->
+          <div class="code-box">
+            <div class="os-tabs-header">
+              <button class="os-tab-btn active" onclick="switchOsTab('win-cmd', this)">🪟 Windows Batch Command</button>
+              <button class="os-tab-btn" onclick="switchOsTab('linux-cmd', this)">🐧 Linux Shell Command</button>
+            </div>
+
+            <!-- Windows Tab -->
+            <div id="win-cmd" class="os-tab-content active">
+              <div class="code-box-header">
+                <span>Windows Batch Script (cmd.exe)</span>
+                <button class="copy-btn" onclick="copyCode('win-code-block')">Copy Script</button>
+              </div>
+              <pre class="code-pre" id="win-code-block">echo ==============================================
+echo Hello from Jenkins running on Windows!
+echo Machine Name: %COMPUTERNAME%
+echo Current Date and Time: %DATE% %TIME%
+echo Current Working Directory: %CD%
+echo ==============================================</pre>
+            </div>
+
+            <!-- Linux Tab -->
+            <div id="linux-cmd" class="os-tab-content">
+              <div class="code-box-header">
+                <span>Linux / Unix Shell Script (/bin/sh)</span>
+                <button class="copy-btn" onclick="copyCode('linux-code-block')">Copy Script</button>
+              </div>
+              <pre class="code-pre" id="linux-code-block">echo "=============================================="
+echo "Hello from Jenkins running on Linux!"
+echo "Hostname: $(hostname)"
+echo "Current Date: $(date)"
+echo "Running as User: $(whoami)"
+echo "Current Working Directory: $(pwd)"
+echo "=============================================="</pre>
+            </div>
+          </div>
+
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 After pasting your code into the <strong>Command</strong> box, click the <span class="click-target">Save</span> button at the bottom.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Command Editor & Save</span>
+              <span>Step 5 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_05_batch_command_editor.png" alt="Batch Command Editor and Save" onclick="openLightbox(this.src)">
+            <div class="screenshot-caption">
+              <span>📌 <strong>Visual Cue:</strong> The batch commands are filled in the textarea, with the red badge pointing to the Save button.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6: Build Now -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">6</div>
+          <div class="step-header-text">
+            <h3>Trigger the Build ('Build Now')</h3>
+            <p>Request Jenkins to spawn a new executor and run the job immediately.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 You are now on the project status page for <strong>01-hello-world</strong>. In the left navigation menu, click <span class="click-target">Build Now</span>.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/job/01-hello-world/</span>
+              <span>Step 6 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_06_job_page_build_now.png" alt="Click Build Now" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7: Build History -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">7</div>
+          <div class="step-header-text">
+            <h3>Inspect Build History Widget</h3>
+            <p>Observe the build queuing, execution, and success status indicator.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Look at the <strong>Build History</strong> box in the lower-left corner. A new build labeled <span class="key-badge">#1</span> will appear with a solid blue ball (indicating SUCCESS).</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Click on <span class="click-target">#1</span> to open the build summary.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Build History Widget</span>
+              <span>Step 7 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_07_build_history.png" alt="Build History #1" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8: Console Output & Instructor Moment -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge green">8</div>
+          <div class="step-header-text">
+            <h3>Examine Console Output & Verify Success</h3>
+            <p>View the real-time execution log output generated by the build runner.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 In the build page, click <span class="click-target">Console Output</span> from the left sidebar menu (or hover over #1 and select Console Output).</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Check that the machine name, date, time, and working directory were echoed properly.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/job/01-hello-world/1/console</span>
+              <span>Step 8 Console Log</span>
+            </div>
+            <img class="screenshot-img" src="images/lab1_08_console_output.png" alt="Console Output Finished SUCCESS" onclick="openLightbox(this.src)">
+          </div>
+
+          <!-- Teaching Moment Alert -->
+          <div id="instructor" class="instructor-box">
+            <div class="instructor-icon">💡</div>
+            <div class="instructor-content">
+              <h4>Instructor Teaching Moment: How Jenkins Detects Success vs Failure</h4>
+              <p>Direct student attention to the final line in the output: <code>Finished: SUCCESS</code>. Explain that Jenkins does not understand the content of human messages. Instead, <strong>Jenkins monitors the operating system exit code</strong> returned when the process finishes:</p>
+              <ul style="margin: 8px 0 8px 24px;">
+                <li><strong>Exit Code 0:</strong> Signals clean completion without errors. Jenkins marks the build as <strong>SUCCESS (Blue Ball)</strong>.</li>
+                <li><strong>Non-zero Exit Code (e.g., 1, 127):</strong> Signals an error. Jenkins aborts subsequent steps and marks the build as <strong>FAILURE (Red Ball)</strong>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- LAB 2 SECTION -->
+    <!-- ========================================== -->
+    <section id="lab2" class="lab-section">
+      <div class="lab-header" style="border-left-color: var(--accent-purple);">
+        <span class="lab-badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd;">Lab 2 Walkthrough</span>
+        <h2>Parameterized Builds (Dynamic Inputs)</h2>
+        <p><strong>Objective:</strong> Learn how enterprise CI/CD pipelines accept dynamic runtime arguments (such as target environment, branch name, or version tag) and inject them into build steps as environment variables.</p>
+      </div>
+
+      <!-- Step 1: New Item -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">1</div>
+          <div class="step-header-text">
+            <h3>Create Project '02-parameterized-job'</h3>
+            <p>Start a new Freestyle project specifically designated for parameterized builds.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 From the Jenkins Dashboard, click <span class="click-target">New Item</span>.</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Enter project name: <span class="key-badge">02-parameterized-job</span></span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Select <span class="click-target">Freestyle project</span> and click <span class="click-target">OK</span>.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/newJob</span>
+              <span>Step 1 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_01_dashboard_new_item.png" alt="Lab 2 New Item" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Parameterized Checkbox -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">2</div>
+          <div class="step-header-text">
+            <h3>Enable 'This project is parameterized'</h3>
+            <p>Turn on parameter handling in the General configuration tab.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 In the <strong>General</strong> tab, locate and check the box labeled: <span class="click-target">This project is parameterized</span>.</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Notice that the <span class="key-badge">Add Parameter</span> dropdown button immediately appears below the checkbox.</span>
+            </div>
+          </div>
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>General Settings Tab</span>
+              <span>Step 2 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_02_general_parameterized_checkbox.png" alt="Parameterized Checkbox Enabled" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Choice Parameter -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">3</div>
+          <div class="step-header-text">
+            <h3>Add Choice Parameter: <code>DEPLOY_ENV</code></h3>
+            <p>Provide a dropdown selector restricting the student to designated environments.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Click <span class="click-target">Add Parameter</span> and select <span class="click-target">Choice Parameter</span>.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Dropdown Selection</span>
+              <span>Step 3: Choice Parameter Select</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_03_dropdown_add_choice.png" alt="Add Choice Parameter Dropdown" onclick="openLightbox(this.src)">
+          </div>
+
+          <div class="instruction-flow" style="margin-top:24px;">
+            <div class="instruction-item">
+              <span>👉 Fill in the Choice Parameter details exactly as shown:</span>
+            </div>
+          </div>
+
+          <table class="param-table">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value to Enter</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Name</strong></td>
+                <td><code>DEPLOY_ENV</code></td>
+                <td>Environment variable identifier used in scripts</td>
+              </tr>
+              <tr>
+                <td><strong>Choices</strong><br>(one per line)</td>
+                <td><code>DEVELOPMENT<br>STAGING<br>PRODUCTION</code></td>
+                <td>Preset options populated in the build dropdown</td>
+              </tr>
+              <tr>
+                <td><strong>Description</strong></td>
+                <td><code>Select deployment target</code></td>
+                <td>Help text displayed to the operator</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Configured Choice Parameter</span>
+              <span>Step 3 Form Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_04_choice_parameter_configured.png" alt="Configured Choice Parameter" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: String Parameter -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">4</div>
+          <div class="step-header-text">
+            <h3>Add String Parameter: <code>APP_VERSION</code></h3>
+            <p>Allow the operator to provide an arbitrary release tag or version number.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Click <span class="click-target">Add Parameter</span> again and select <span class="click-target">String Parameter</span>.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Dropdown Selection</span>
+              <span>Step 4: String Parameter Select</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_05_dropdown_add_string.png" alt="Add String Parameter Dropdown" onclick="openLightbox(this.src)">
+          </div>
+
+          <div class="instruction-flow" style="margin-top:24px;">
+            <div class="instruction-item">
+              <span>👉 Fill in the String Parameter details:</span>
+            </div>
+          </div>
+
+          <table class="param-table">
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value to Enter</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Name</strong></td>
+                <td><code>APP_VERSION</code></td>
+                <td>Variable key accessible by build steps</td>
+              </tr>
+              <tr>
+                <td><strong>Default Value</strong></td>
+                <td><code>1.0.0</code></td>
+                <td>Fallback value if no custom tag is entered</td>
+              </tr>
+              <tr>
+                <td><strong>Description</strong></td>
+                <td><code>Release version number</code></td>
+                <td>Help text displayed on the build screen</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Configured String Parameter</span>
+              <span>Step 4 Form Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_06_string_parameter_configured.png" alt="Configured String Parameter" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 & 6: Parameterized Build Step -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">5 & 6</div>
+          <div class="step-header-text">
+            <h3>Add Parameterized Command & Save</h3>
+            <p>Reference the dynamic variables in your build step script.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Scroll down to <strong>Build Steps</strong> -> Click <span class="click-target">Add build step</span> -> Select runner for your OS.</span>
+            </div>
+          </div>
+
+          <!-- OS Tabs Switcher -->
+          <div class="code-box">
+            <div class="os-tabs-header">
+              <button class="os-tab-btn active" onclick="switchOsTab('win-param-cmd', this)">🪟 Windows Batch Command</button>
+              <button class="os-tab-btn" onclick="switchOsTab('linux-param-cmd', this)">🐧 Linux Shell Command</button>
+            </div>
+
+            <!-- Windows Tab -->
+            <div id="win-param-cmd" class="os-tab-content active">
+              <div class="code-box-header">
+                <span>Windows Batch Syntax (%VARIABLE%)</span>
+                <button class="copy-btn" onclick="copyCode('win-param-code')">Copy Script</button>
+              </div>
+              <pre class="code-pre" id="win-param-code">echo Deploying Version %APP_VERSION% to %DEPLOY_ENV% Environment...</pre>
+            </div>
+
+            <!-- Linux Tab -->
+            <div id="linux-param-cmd" class="os-tab-content">
+              <div class="code-box-header">
+                <span>Linux Shell Syntax (${VARIABLE})</span>
+                <button class="copy-btn" onclick="copyCode('linux-param-code')">Copy Script</button>
+              </div>
+              <pre class="code-pre" id="linux-param-code">echo "Deploying Version ${APP_VERSION} to ${DEPLOY_ENV} Environment..."</pre>
+            </div>
+          </div>
+
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Scroll to the bottom and click <span class="click-target">Save</span>.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Parameterized Build Step Editor</span>
+              <span>Step 5 & 6 Screen</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_07_build_step_parameterized.png" alt="Parameterized Build Step and Save" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7: Build with Parameters -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge">7</div>
+          <div class="step-header-text">
+            <h3>Notice 'Build with Parameters' & Trigger</h3>
+            <p>Experience how the UI dynamically transforms to prompt for user inputs.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Notice that the sidebar button has changed from <em>'Build Now'</em> to <span class="click-target">Build with Parameters</span>! Click it.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>Job Status Page</span>
+              <span>Step 7 Sidebar Change</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_08_sidebar_build_with_parameters.png" alt="Sidebar Build with Parameters" onclick="openLightbox(this.src)">
+          </div>
+
+          <div class="instruction-flow" style="margin-top:24px;">
+            <div class="instruction-item">
+              <span>👉 In the parameters form:
+                <br>• Pick <strong>DEPLOY_ENV:</strong> <span class="key-badge">STAGING</span>
+                <br>• Change <strong>APP_VERSION:</strong> <span class="key-badge">v2.0.0</span>
+              </span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Click the blue <span class="click-target">Build</span> button.</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/job/02-parameterized-job/build</span>
+              <span>Step 7 Parameter Selection</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_09_build_parameters_screen.png" alt="Build Parameters Selection" onclick="openLightbox(this.src)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8: Verify Console Output -->
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-number-badge green">8</div>
+          <div class="step-header-text">
+            <h3>Verify Dynamic Value Injection in Console Output</h3>
+            <p>Confirm that Jenkins resolved the variables at execution time.</p>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="instruction-flow">
+            <div class="instruction-item">
+              <span>👉 Look at Build History for <span class="key-badge">#1</span> -> Click <span class="click-target">Console Output</span>.</span>
+            </div>
+            <div class="instruction-item">
+              <span>👉 Verify the line reads: <code>Deploying Version v2.0.0 to STAGING Environment...</code> and ends with <code>Finished: SUCCESS</code>!</span>
+            </div>
+          </div>
+
+          <div class="screenshot-wrapper">
+            <div class="screenshot-toolbar">
+              <div class="browser-dots">
+                <div class="browser-dot dot-red"></div>
+                <div class="browser-dot dot-yellow"></div>
+                <div class="browser-dot dot-green"></div>
+              </div>
+              <span>http://localhost:8000/job/02-parameterized-job/1/console</span>
+              <span>Step 8 Verified Console Log</span>
+            </div>
+            <img class="screenshot-img" src="images/lab2_10_console_output_verified.png" alt="Console Output Verified Parameters" onclick="openLightbox(this.src)">
+          </div>
+
+          <!-- Teaching Moment Alert -->
+          <div class="instructor-box">
+            <div class="instructor-icon">🎓</div>
+            <div class="instructor-content">
+              <h4>Instructor Teaching Moment: Enterprise Environment Variable Mechanics</h4>
+              <p>Jenkins automatically converts every declared project parameter into an environment variable before launching the build process. Key takeaways for students:</p>
+              <ul style="margin: 8px 0 8px 24px;">
+                <li><strong>OS Portability:</strong> On Windows, variables are accessed via <code>%PARAM_NAME%</code>. On Linux/Unix, via <code>${PARAM_NAME}</code>. In Jenkinsfiles (Pipeline syntax), via <code>params.PARAM_NAME</code> or <code>env.PARAM_NAME</code>.</li>
+                <li><strong>Security & Sanitization:</strong> In production pipelines, always sanitize user-supplied string parameters to prevent command injection vulnerabilities.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Enlarged Screenshot">
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>DevOps Engineering Lab Manual &bull; Generated for Jenkins 2.580.1 on <code>http://localhost:8000</code></p>
+    <p style="margin-top:8px; font-size:12px; color:var(--text-muted)">Created with interactive screen guides &bull; Click any screenshot to enlarge</p>
+  </footer>
+
+  <script>
+    // Tab switching for OS commands
+    function switchOsTab(tabId, btn) {
+      const parent = btn.closest('.code-box');
+      parent.querySelectorAll('.os-tab-btn').forEach(b => b.classList.remove('active'));
+      parent.querySelectorAll('.os-tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      parent.querySelector('#' + tabId).classList.add('active');
+    }
+
+    // Smooth scroll to lab section
+    function scrollToLab(labId) {
+      document.querySelectorAll('.lab-tab-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      const el = document.getElementById(labId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Copy code snippet to clipboard
+    function copyCode(elementId) {
+      const code = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = event.currentTarget;
+        const orig = btn.innerText;
+        btn.innerText = 'Copied! ✓';
+        btn.style.background = '#10b981';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+
+    // Lightbox modal handler
+    function openLightbox(src) {
+      const modal = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImg');
+      img.src = src;
+      modal.classList.add('active');
+    }
+    function closeLightbox() {
+      document.getElementById('lightboxModal').classList.remove('active');
+    }
+
+    // Theme toggle
+    const themeBtn = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.body.getAttribute('data-theme') !== 'light';
+      if (isDark) {
+        document.body.setAttribute('data-theme', 'light');
+        themeBtn.querySelector('span').innerText = '☀️';
+        themeLabel.innerText = 'Light Mode';
+      } else {
+        document.body.removeAttribute('data-theme');
+        themeBtn.querySelector('span').innerText = '🌙';
+        themeLabel.innerText = 'Dark Mode';
+      }
+    });
+  </script>
+</body>
+</html>
